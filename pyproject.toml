@@ -8,6 +8,7 @@ authors = [
 ]
 requires-python = ">=3.11"
 dependencies = [
+    "groq>=1.7.0",
     "python-dotenv>=1.2.4",
 ]
 
@@ -15,6 +16,7 @@ dependencies = [
 shiftguard = "shiftguard:main"
 shiftguard-telegram-setup = "shiftguard.telegram_setup:main"
 shiftguard-send-demo-alert = "shiftguard.telegram_notify:main"
+shiftguard-draft-demo-message = "shiftguard.draft_demo:main"
 
 [build-system]
 requires = ["uv_build>=0.13.7,<0.14.0"]
