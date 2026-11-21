@@ -1,0 +1,41 @@
+{
+  "shifts": [
+    {
+      "title": "Harbour Foods shift - Friday",
+      "starts_at": "2026-10-23T16:00:00",
+      "ends_at": "2026-10-23T22:00:00"
+    },
+    {
+      "title": "Harbour Foods shift - Saturday",
+      "starts_at": "2026-10-24T09:00:00",
+      "ends_at": "2026-10-24T15:00:00"
+    },
+    {
+      "title": "Harbour Foods shift - Monday",
+      "starts_at": "2026-10-26T18:00:00",
+      "ends_at": "2026-10-26T21:00:00"
+    }
+  ],
+  "protected_events": [
+    {
+      "title": "Team bus to Saint John",
+      "starts_at": "2026-10-23T14:00:00",
+      "ends_at": "2026-10-23T18:00:00"
+    },
+    {
+      "title": "Swim practice (taper)",
+      "starts_at": "2026-10-23T17:30:00",
+      "ends_at": "2026-10-23T19:00:00"
+    },
+    {
+      "title": "Fundy Invitational",
+      "starts_at": "2026-10-24T07:00:00",
+      "ends_at": "2026-10-24T17:00:00"
+    },
+    {
+      "title": "Swim practice",
+      "starts_at": "2026-10-26T06:00:00",
+      "ends_at": "2026-10-26T07:00:00"
+    }
+  ]
+}
