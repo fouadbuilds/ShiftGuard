@@ -17,6 +17,7 @@ shiftguard = "shiftguard:main"
 shiftguard-telegram-setup = "shiftguard.telegram_setup:main"
 shiftguard-send-demo-alert = "shiftguard.telegram_notify:main"
 shiftguard-draft-demo-message = "shiftguard.draft_demo:main"
+shiftguard-send-demo-draft = "shiftguard.telegram_draft:main"
 
 [build-system]
 requires = ["uv_build>=0.13.7,<0.14.0"]
