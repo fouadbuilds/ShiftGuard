@@ -36,6 +36,7 @@ def test_drafts_a_manager_message_from_confirmed_conflict_facts() -> None:
 
     assert draft == "Hi Dana, I have a team bus conflict with my Friday shift. Could we discuss a swap? Thanks!"
     assert captured["model"] == "openai/gpt-oss-20b"
-    assert captured["max_completion_tokens"] == 120
+    assert captured["reasoning_effort"] == "low"
+    assert captured["max_completion_tokens"] == 256
     assert "Harbour Foods shift - Friday" in captured["messages"][1]["content"]
     assert "Team bus to Saint John" in captured["messages"][1]["content"]

@@ -21,7 +21,8 @@ def draft_manager_message(
     """
     response = create_completion(
         model=MODEL,
-        max_completion_tokens=120,
+        reasoning_effort="low",
+        max_completion_tokens=256,
         messages=[
             {
                 "role": "system",
