@@ -1,0 +1,117 @@
+# ShiftGuard
+
+ShiftGuard is a small AI-assisted safety net for **Chloe Nguyen**, a student swimmer who also works part-time shifts. It spots a work shift that clashes with a swim commitment, including travel time, then sends Chloe a Telegram alert and a manager-message draft for her to review.
+
+> ShiftGuard helps Chloe notice a problem early. Chloe stays in control of every decision and every message.
+
+## The problem
+
+Chloe's busy schedule has two separate sources of commitments: work shifts and swim-team events. A shift can look valid on paper but still be impossible in practice—for example, a 6:00 PM finish before a 6:15 PM team bus. That 15-minute gap is not enough time to travel or warm up.
+
+The demo applies a **30-minute buffer before every protected swim commitment**. It therefore catches both direct overlaps and practical travel-time conflicts.
+
+## What it does
+
+1. Loads fictional work shifts and swim commitments from `data/demo_schedule.json`.
+2. Finds every work shift that overlaps a protected commitment or its 30-minute lead-in buffer.
+3. Sends Chloe a Telegram alert listing the conflicts.
+4. Uses Groq's `openai/gpt-oss-20b` model to draft a short, polite message to Dana, Chloe's manager.
+5. Sends that draft to Chloe's private Telegram chat with a clear review-only label.
+
+## What it deliberately does not do
+
+- Send a message to Dana or any manager.
+- Change, cancel, or accept work shifts.
+- Find a replacement worker.
+- Invent schedule facts that were not supplied.
+- Treat an AI draft as an approved action.
+
+## Architecture
+
+```text
+demo schedule JSON
+        |
+        v
+deterministic conflict checker -- 30-minute buffer --> Telegram conflict alert
+        |
+        v
+confirmed conflict facts --> Groq draft generator --> review-only Telegram draft
+```
+
+The deterministic code decides whether a conflict exists. The language model only turns already-confirmed facts into a human-readable draft. This separation keeps the important scheduling decision predictable and testable.
+
+## Setup
+
+### 1. Install dependencies
+
+```powershell
+uv sync
+```
+
+### 2. Create local configuration
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Fill in the values in `.env`:
+
+```env
+TELEGRAM_BOT_TOKEN=your-telegram-bot-token
+TELEGRAM_CHAT_ID=your-private-chat-id
+GROQ_API_KEY=your-groq-api-key
+```
+
+`.env` is ignored by Git. Never commit or share real tokens.
+
+To discover the private Telegram chat ID after sending `/start` to your bot:
+
+```powershell
+uv run shiftguard-telegram-setup
+```
+
+Copy the printed chat ID into `.env` as `TELEGRAM_CHAT_ID`.
+
+## Demo
+
+Run the two commands below in order:
+
+```powershell
+uv run shiftguard-send-demo-alert
+uv run shiftguard-send-demo-draft
+```
+
+Expected result in Telegram:
+
+1. A conflict alert that identifies the detected scheduling problems.
+2. A second message labelled `DRAFT FOR REVIEW (not sent to Dana)` containing a suggested message Chloe can copy, edit, or ignore.
+
+To view the draft in the terminal instead of sending it to Telegram:
+
+```powershell
+uv run shiftguard-draft-demo-message
+```
+
+## Testing
+
+```powershell
+uv run pytest
+```
+
+The test suite covers the buffer-aware conflict rule, schedule loading, Telegram formatting and delivery boundaries, Groq draft configuration, and the review-only Telegram draft flow.
+
+## Project structure
+
+```text
+data/demo_schedule.json          Fictional shifts and swim commitments
+src/shiftguard/conflicts.py      Buffer-aware conflict detection
+src/shiftguard/telegram.py       Telegram settings and delivery
+src/shiftguard/drafting.py       Safe, bounded message-draft prompt
+src/shiftguard/groq_drafting.py  Groq configuration and API boundary
+src/shiftguard/telegram_draft.py Review-only Telegram draft command
+tests/                           Automated behaviour checks
+```
+
+## Stretch goal
+
+If ShiftGuard grows, it could spot a newly added meet and help Chloe prepare an availability update before the next work schedule is published. It would still leave approval and sending to Chloe.

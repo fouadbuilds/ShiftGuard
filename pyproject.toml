@@ -1,7 +1,7 @@
 [project]
 name = "shiftguard"
 version = "0.1.0"
-description = "Add your description here"
+description = "Buffer-aware shift conflict alerts and review-only manager drafts"
 readme = "README.md"
 authors = [
     { name = "fouadbuilds" }
