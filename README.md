@@ -81,6 +81,12 @@ uv run shiftguard-send-demo-alert
 uv run shiftguard-send-demo-draft
 ```
 
+Or use the one-command presentation flow:
+
+```powershell
+uv run shiftguard-demo
+```
+
 Expected result in Telegram:
 
 1. A conflict alert that identifies the detected scheduling problems.
@@ -110,6 +116,7 @@ src/shiftguard/drafting.py       Safe, bounded message-draft prompt
 src/shiftguard/groq_drafting.py  Groq configuration and API boundary
 src/shiftguard/telegram_draft.py Review-only Telegram draft command
 tests/                           Automated behaviour checks
+docs/demo-script.md               Short presentation walkthrough
 ```
 
 ## Stretch goal
