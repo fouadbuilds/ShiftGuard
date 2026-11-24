@@ -2,7 +2,7 @@
 
 ShiftGuard is a small AI-assisted safety net for **Chloe Nguyen**, a student swimmer who also works part-time shifts. It spots a work shift that clashes with a swim commitment, including travel time, then sends Chloe a Telegram alert and a manager-message draft for her to review.
 
-> ShiftGuard helps Chloe notice a problem early. Chloe stays in control of every decision and every message.
+- ShiftGuard helps Chloe notice a problem early. Chloe stays in control of every decision and every message.
 
 ## The problem
 
@@ -18,7 +18,7 @@ The demo applies a **30-minute buffer before every protected swim commitment**. 
 4. Uses Groq's `openai/gpt-oss-20b` model to draft a short, polite message to Dana, Chloe's manager.
 5. Sends that draft to Chloe's private Telegram chat with a clear review-only label.
 
-## What it deliberately does not do
+## What it does not do
 
 - Send a message to Dana or any manager.
 - Change, cancel, or accept work shifts.
@@ -32,7 +32,7 @@ The demo applies a **30-minute buffer before every protected swim commitment**. 
 demo schedule JSON
         |
         v
-deterministic conflict checker -- 30-minute buffer --> Telegram conflict alert
+conflict checker -- 30-minute buffer --> Telegram conflict alert
         |
         v
 confirmed conflict facts --> Groq draft generator --> review-only Telegram draft
@@ -48,11 +48,6 @@ The deterministic code decides whether a conflict exists. The language model onl
 uv sync
 ```
 
-### 2. Create local configuration
-
-```powershell
-Copy-Item .env.example .env
-```
 
 Fill in the values in `.env`:
 
@@ -62,7 +57,6 @@ TELEGRAM_CHAT_ID=your-private-chat-id
 GROQ_API_KEY=your-groq-api-key
 ```
 
-`.env` is ignored by Git. Never commit or share real tokens.
 
 To discover the private Telegram chat ID after sending `/start` to your bot:
 
@@ -106,19 +100,3 @@ uv run pytest
 
 The test suite covers the buffer-aware conflict rule, schedule loading, Telegram formatting and delivery boundaries, Groq draft configuration, and the review-only Telegram draft flow.
 
-## Project structure
-
-```text
-data/demo_schedule.json          Fictional shifts and swim commitments
-src/shiftguard/conflicts.py      Buffer-aware conflict detection
-src/shiftguard/telegram.py       Telegram settings and delivery
-src/shiftguard/drafting.py       Safe, bounded message-draft prompt
-src/shiftguard/groq_drafting.py  Groq configuration and API boundary
-src/shiftguard/telegram_draft.py Review-only Telegram draft command
-tests/                           Automated behaviour checks
-docs/demo-script.md               Short presentation walkthrough
-```
-
-## Stretch goal
-
-If ShiftGuard grows, it could spot a newly added meet and help Chloe prepare an availability update before the next work schedule is published. It would still leave approval and sending to Chloe.
