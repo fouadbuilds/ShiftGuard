@@ -44,7 +44,12 @@ The deterministic code decides whether a conflict exists. The language model onl
 
 ### 1. Install dependencies
 
-```powershell
+
+```bash
+pip install uv
+```
+
+```bash
 uv sync
 ```
 
@@ -60,7 +65,7 @@ GROQ_API_KEY=your-groq-api-key
 
 To discover the private Telegram chat ID after sending `/start` to your bot:
 
-```powershell
+```bash
 uv run shiftguard-telegram-setup
 ```
 
@@ -70,14 +75,14 @@ Copy the printed chat ID into `.env` as `TELEGRAM_CHAT_ID`.
 
 Run the two commands below in order:
 
-```powershell
+```bash
 uv run shiftguard-send-demo-alert
 uv run shiftguard-send-demo-draft
 ```
 
 Or use the one-command presentation flow:
 
-```powershell
+```bash
 uv run shiftguard-demo
 ```
 
@@ -88,13 +93,13 @@ Expected result in Telegram:
 
 To view the draft in the terminal instead of sending it to Telegram:
 
-```powershell
+```bash
 uv run shiftguard-draft-demo-message
 ```
 
 ## Testing
 
-```powershell
+```bash
 uv run pytest
 ```
 
