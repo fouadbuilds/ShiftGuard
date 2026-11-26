@@ -22,8 +22,8 @@ def test_draft_command_sends_a_review_only_draft_to_telegram(monkeypatch, capsys
     monkeypatch.setattr(
         telegram_draft,
         "create_manager_draft",
-        lambda conflict, api_key: drafted_for.update(
-            conflict=conflict,
+        lambda conflicts, api_key: drafted_for.update(
+            conflicts=conflicts,
             api_key=api_key,
         )
         or "Hi Dana, could we discuss an alternative for my Friday shift? Thanks!",
@@ -37,7 +37,12 @@ def test_draft_command_sends_a_review_only_draft_to_telegram(monkeypatch, capsys
     telegram_draft.main()
 
     assert drafted_for["api_key"] == "test-groq-key"
-    assert drafted_for["conflict"].shift.title == "Harbour Foods shift - Friday"
+    conflict_titles = [conflict.shift.title for conflict in drafted_for["conflicts"]]
+    assert conflict_titles == [
+        "Harbour Foods shift - Friday",
+        "Harbour Foods shift - Friday",
+        "Harbour Foods shift - Saturday",
+    ]
     assert sent["settings"] == telegram_settings
     assert sent["text"] == (
         "DRAFT FOR REVIEW (not sent to Dana):\n\n"

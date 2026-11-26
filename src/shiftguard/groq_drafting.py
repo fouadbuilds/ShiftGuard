@@ -1,7 +1,7 @@
 """Configuration and API boundary for ShiftGuard's Groq-powered drafts."""
 
 import os
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -32,14 +32,14 @@ class GroqSettings:
 
 
 def create_manager_draft(
-    conflict: Conflict,
+    conflicts: Sequence[Conflict],
     *,
     api_key: str,
     client_factory: Callable[..., Any] = Groq,
 ) -> str:
-    """Ask Groq for a reviewable draft based on one confirmed conflict."""
+    """Ask Groq for one reviewable draft based on confirmed conflicts."""
     client = client_factory(api_key=api_key)
     return draft_manager_message(
-        conflict,
+        conflicts,
         create_completion=client.chat.completions.create,
     )

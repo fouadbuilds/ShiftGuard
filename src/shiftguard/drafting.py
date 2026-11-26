@@ -1,6 +1,6 @@
 """Create reviewable manager-message drafts from confirmed schedule conflicts."""
 
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from typing import Any
 
 from shiftguard.conflicts import Conflict
@@ -11,14 +11,17 @@ MAX_DRAFT_CHARACTERS = 500
 
 
 def draft_manager_message(
-    conflict: Conflict, *, create_completion: Callable[..., Any]
+    conflicts: Sequence[Conflict], *, create_completion: Callable[..., Any]
 ) -> str:
-    """Return a concise draft for Chloe to review before she sends anything.
+    """Return one concise draft covering every conflict Chloe must review.
 
     ``create_completion`` is injected so this behaviour can be tested without
     calling an AI service. The caller owns the client, credentials, and any
     network request.
     """
+    if not conflicts:
+        raise ValueError("At least one confirmed conflict is required to create a draft")
+
     response = create_completion(
         model=MODEL,
         reasoning_effort="low",
@@ -28,14 +31,15 @@ def draft_manager_message(
                 "role": "system",
                 "content": (
                     "Write one concise, polite message from Chloe to her manager Dana. "
-                    "Use only the supplied facts. Ask to discuss an alternative shift. "
+                    "Use only the supplied facts. Mention every confirmed conflict and ask "
+                    "to discuss alternative shifts. "
                     "Return only the message body, under 75 words. Do not claim that "
                     "a message was sent, a shift was changed, or a replacement was found."
                 ),
             },
             {
                 "role": "user",
-                "content": _conflict_facts(conflict),
+                "content": _conflict_facts(conflicts),
             },
         ],
     )
@@ -57,14 +61,17 @@ def draft_manager_message(
     return draft
 
 
-def _conflict_facts(conflict: Conflict) -> str:
-    """Format the deterministic conflict data as plain facts for the model."""
-    return (
-        "Confirmed schedule conflict:\n"
-        f"- Work shift: {conflict.shift.title}\n"
-        f"- Shift time: {conflict.shift.starts_at:%A, %B %d, %I:%M %p} "
-        f"to {conflict.shift.ends_at:%I:%M %p}\n"
-        f"- Protected commitment: {conflict.protected_event.title}\n"
-        f"- Commitment time: {conflict.protected_event.starts_at:%A, %B %d, %I:%M %p} "
-        f"to {conflict.protected_event.ends_at:%I:%M %p}"
-    )
+def _conflict_facts(conflicts: Sequence[Conflict]) -> str:
+    """Format deterministic conflict data as plain facts for the model."""
+    sections = []
+    for number, conflict in enumerate(conflicts, start=1):
+        sections.append(
+            f"Confirmed schedule conflict {number}:\n"
+            f"- Work shift: {conflict.shift.title}\n"
+            f"- Shift time: {conflict.shift.starts_at:%A, %B %d, %I:%M %p} "
+            f"to {conflict.shift.ends_at:%I:%M %p}\n"
+            f"- Protected commitment: {conflict.protected_event.title}\n"
+            f"- Commitment time: {conflict.protected_event.starts_at:%A, %B %d, %I:%M %p} "
+            f"to {conflict.protected_event.ends_at:%I:%M %p}"
+        )
+    return "\n\n".join(sections)

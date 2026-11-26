@@ -24,7 +24,7 @@ def main() -> None:
         return
 
     draft = create_manager_draft(
-        conflicts[0],
+        conflicts,
         api_key=groq_settings.api_key,
     )
     message = f"DRAFT FOR REVIEW (not sent to Dana):\n\n{draft}"

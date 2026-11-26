@@ -15,7 +15,7 @@ The demo applies a **30-minute buffer before every protected swim commitment**. 
 1. Loads fictional work shifts and swim commitments from `data/demo_schedule.json`.
 2. Finds every work shift that overlaps a protected commitment or its 30-minute lead-in buffer.
 3. Sends Chloe a Telegram alert listing the conflicts.
-4. Uses Groq's `openai/gpt-oss-20b` model to draft a short, polite message to Dana, Chloe's manager.
+4. Uses Groq's `openai/gpt-oss-20b` model to draft one short, polite message to Dana that covers every detected conflict.
 5. Sends that draft to Chloe's private Telegram chat with a clear review-only label.
 
 ## What it does not do
@@ -39,6 +39,18 @@ confirmed conflict facts --> Groq draft generator --> review-only Telegram draft
 ```
 
 The deterministic code decides whether a conflict exists. The language model only turns already-confirmed facts into a human-readable draft. This separation keeps the important scheduling decision predictable and testable.
+
+## Before you start
+
+You will need:
+
+- Python 3.11 or newer.
+- [uv](https://docs.astral.sh/uv/) to install and run the project.
+- A Telegram account and a bot token from [BotFather](https://t.me/BotFather).
+- A private Telegram chat ID for the account that will receive alerts. Send `/start` to your bot before discovering it.
+- A [Groq API key](https://console.groq.com/keys) for the review-only message draft.
+
+Keep the token and API key private. They belong only in your local `.env` file, which Git ignores.
 
 ## Setup
 
