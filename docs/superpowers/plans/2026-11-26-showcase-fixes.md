@@ -19,6 +19,7 @@
 
 - [ ] Add a failing unit test showing that two conflicts appear in the facts supplied to Groq.
 - [ ] Run the focused drafting test and confirm it fails because the current function accepts one conflict.
+- [ ] Update the Groq-wrapper test to pass two conflicts and assert both reach its completion request.
 - [ ] Add a failing Telegram-flow test showing the complete conflict list is passed to drafting.
 - [ ] Run the focused Telegram-flow test and confirm it fails because the command selects `conflicts[0]`.
 
@@ -42,11 +43,10 @@
 - [ ] Add a "Before you start" section above setup listing Python 3.12+, uv, a Telegram account/bot token/private chat ID, and a Groq API key.
 - [ ] Keep secrets out of examples and retain the existing `.env` instructions.
 
-### Task 4: Verify and save the change
+### Task 4: Verify the change
 
 **Files:**
-- Modify: `docs/superpowers/plans/2026-11-26-showcase-fixes.md`
+- Verify: `tests/`
 
 - [ ] Run `uv run pytest`.
 - [ ] Review `git diff --check` and `git diff` for accidental secrets.
-- [ ] Commit the tested change with `fix: include every conflict in review draft`.
