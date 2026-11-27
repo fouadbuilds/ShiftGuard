@@ -1,3 +1,5 @@
+
+
 # ShiftGuard Showcase
 
 **ShiftGuard** helps student athletes catch work shifts that clash with training, travel, or competition before the conflict becomes a last-minute problem.
@@ -6,7 +8,7 @@
 
 ## Watch the demo
 
-[Watch the short screen-recorded demo](demo/screen.mp4)
+[Watch the short screen-recorded demo](https://github.com/user-attachments/assets/85e35c49-31dc-4d89-9d22-8a17740ef106)
 
 The recording shows ShiftGuard sending Chloe a Telegram alert, then a single review-only draft that covers every confirmed conflict.
 
