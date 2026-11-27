@@ -1,8 +1,22 @@
 from datetime import datetime
+from pathlib import Path
 from types import SimpleNamespace
 
 from shiftguard.conflicts import Conflict, ScheduleEvent
-from shiftguard.groq_drafting import create_manager_draft
+from shiftguard.groq_drafting import GroqSettings, create_manager_draft
+
+
+def test_local_env_file_overrides_a_stale_groq_key_in_the_process(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    monkeypatch.setenv("GROQ_API_KEY", "old-key")
+    env_path = tmp_path / ".env"
+    env_path.write_text("GROQ_API_KEY=new-key\n")
+
+    settings = GroqSettings.from_environment(env_path=env_path)
+
+    assert settings == GroqSettings(api_key="new-key")
 
 
 def test_create_manager_draft_forwards_every_conflict_to_the_groq_client() -> None:

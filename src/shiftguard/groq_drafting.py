@@ -23,7 +23,7 @@ class GroqSettings:
         if env_path is None:
             env_path = Path(__file__).parents[2] / ".env"
 
-        load_dotenv(dotenv_path=env_path, override=False)
+        load_dotenv(dotenv_path=env_path, override=True)
         api_key = os.environ.get("GROQ_API_KEY")
         if not api_key:
             raise RuntimeError("GROQ_API_KEY is not configured")

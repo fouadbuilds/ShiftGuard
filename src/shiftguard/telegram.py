@@ -23,7 +23,7 @@ class TelegramSettings:
         if env_path is None:
             env_path = Path(__file__).parents[2] / ".env"
 
-        load_dotenv(dotenv_path=env_path, override=False)
+        load_dotenv(dotenv_path=env_path, override=True)
         bot_token = os.environ.get("TELEGRAM_BOT_TOKEN")
         chat_id = os.environ.get("TELEGRAM_CHAT_ID")
 

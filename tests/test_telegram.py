@@ -11,11 +11,14 @@ from shiftguard.telegram import (
 )
 
 
-def test_reads_telegram_settings_from_environment(monkeypatch) -> None:
+def test_reads_telegram_settings_from_environment_when_no_env_file_exists(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
     monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "test-token")
     monkeypatch.setenv("TELEGRAM_CHAT_ID", "123456")
 
-    settings = TelegramSettings.from_environment()
+    settings = TelegramSettings.from_environment(env_path=tmp_path / ".missing-env")
 
     assert settings.bot_token == "test-token"
     assert settings.chat_id == "123456"
@@ -33,6 +36,20 @@ def test_reads_telegram_settings_from_a_local_env_file(
     settings = TelegramSettings.from_environment(env_path=env_path)
 
     assert settings == TelegramSettings(bot_token="test-token", chat_id="123456")
+
+
+def test_local_env_file_overrides_stale_telegram_settings_in_the_process(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "old-token")
+    monkeypatch.setenv("TELEGRAM_CHAT_ID", "old-chat-id")
+    env_path = tmp_path / ".env"
+    env_path.write_text("TELEGRAM_BOT_TOKEN=new-token\nTELEGRAM_CHAT_ID=new-chat-id\n")
+
+    settings = TelegramSettings.from_environment(env_path=env_path)
+
+    assert settings == TelegramSettings(bot_token="new-token", chat_id="new-chat-id")
 
 
 def test_formats_a_conflict_as_a_telegram_alert() -> None:
